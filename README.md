@@ -31,5 +31,10 @@ Uzytkownik ma możliwość zaproponowania własnego cytatu, który trafi następ
  * Azure Wev App
  * Azure Hive
 
+### Narzędzia
+ * Locust
+ * Jaeger
+
+
 ## Architektura
 * Klient - Serwer
