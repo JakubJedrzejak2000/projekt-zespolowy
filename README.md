@@ -32,8 +32,8 @@ Uzytkownik ma możliwość zaproponowania własnego cytatu, który trafi do bazy
  * Azure Hive
 
 ### Narzędzia
- * Locust
- * Jaeger
+ * Grafana
+ * Prometheus
 
 
 ## Architektura
