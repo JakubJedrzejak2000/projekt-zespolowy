@@ -25,6 +25,7 @@ Uzytkownik ma możliwość zaproponowania własnego cytatu, który trafi do bazy
   * Swagger
   * JUNIT 5
   * PostgreSQL
+  * Mockito
 
 ### Technologie chmurowe
 
