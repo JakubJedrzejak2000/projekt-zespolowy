@@ -11,7 +11,9 @@ public interface QuoteRepository extends JpaRepository<Quote, Long> {
     Quote findByDescription(String description);
 
     @Query(
-            value = "SELECT * FROM qoute u WHERE u.category_type = ?1 AND approved = 1 ORDER BY rand() limit 1",
+            value = "SELECT * FROM quote u WHERE u.category_type = ?1 AND approved = false ORDER BY RANDOM() LIMIT 1;",
             nativeQuery = true)
-    Quote findByCategoryTypeAndApproved(CategoryType categoryType);
+    Quote findByCategoryTypeAndApproved(String categoryType);
+
+    int countByCategoryType(String categoryType);
 }

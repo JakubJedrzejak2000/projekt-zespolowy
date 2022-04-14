@@ -1,6 +1,13 @@
 package com.example.demo.quotes.model;
 
+import lombok.AllArgsConstructor;
+import lombok.Getter;
+
+@AllArgsConstructor
 public enum CategoryType {
-    TECHNOLOGY,
-    LIFE;
+    TECHNOLOGY("technology"),
+    LIFE("life");
+
+    @Getter
+    private final String category;
 }

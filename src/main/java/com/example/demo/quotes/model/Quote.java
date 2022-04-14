@@ -22,7 +22,7 @@ public class Quote {
     private Long id;
     private String description;
     private String author;
-    private CategoryType categoryType;
+    private String categoryType;
     private String addedBy;
     private boolean approved;
     private Date date;

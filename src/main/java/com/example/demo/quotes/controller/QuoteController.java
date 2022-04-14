@@ -17,12 +17,22 @@ public class QuoteController {
     }
 
     @PostMapping("/quote")
-    public void addQuote(@RequestBody Quote quote){
-        quoteService.addQuote(quote);
+    public void addQuote(@RequestBody QuoteDto quoteDto){
+        quoteService.addQuote(quoteDto);
+    }
+
+    @PostMapping("/quote/approve")
+    public void approveQuote(@RequestParam("id") long id){
+        quoteService.approveQuote(id);
     }
 
     @GetMapping("/quote/{categoryType}")
     public QuoteDto randomQuote(@PathVariable CategoryType categoryType){
         return quoteService.getRandomQuoteByCategory(categoryType);
+    }
+
+    @GetMapping("/quote/count/{categoryType}")
+    public int countQuotes(@PathVariable CategoryType categoryType){
+        return quoteService.getNumberOfQuotesByCategory(categoryType);
     }
 }

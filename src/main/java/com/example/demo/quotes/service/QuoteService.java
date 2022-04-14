@@ -18,32 +18,48 @@ public class QuoteService {
         this.quoteRepository = quoteRepository;
     }
 
-    public void addQuote(Quote quote) {
-        if (quote.getDescription() == null)
+    public void addQuote(QuoteDto quoteDto) {
+        if (quoteDto.getDescription() == null)
             return;
+        if (validateQuote(quoteDto)) {
+            String unknownPerson = "Unknown";
+            Quote quote = new Quote();
 
-        if (validateQuote(quote)) {
-            if (quote.getAuthor() == null) {
-                quote.setAuthor("Unknown");
-            }
-            if (quote.getAddedBy() == null) {
-                quote.setAddedBy("Unknown");
-            }
+            quote.setDescription(quoteDto.getDescription());
+            String authorName = quoteDto.getAuthor() == null ? unknownPerson : quoteDto.getAuthor();
+            quote.setAuthor(authorName);
 
+            String username = quoteDto.getAddedBy() == null ? unknownPerson : quoteDto.getAddedBy();
+            quote.setAddedBy(username);
             quote.setDate(new Date());
             quote.setApproved(false);
+            quote.setCategoryType(quoteDto.getCategoryType().getCategory());
 
             quoteRepository.save(quote);
         }
     }
 
     public QuoteDto getRandomQuoteByCategory(CategoryType categoryType) {
-        Quote quote = quoteRepository.findByCategoryTypeAndApproved(categoryType);
+        Quote quote = quoteRepository.findByCategoryTypeAndApproved(categoryType.getCategory());
         return QuoteDto.mapIntoQuoteDto(quote);
     }
 
-    private boolean validateQuote(Quote quote) {
-        Quote findQuiteByDescription = quoteRepository.findByDescription(quote.getDescription());
-        return findQuiteByDescription != null;
+    public void approveQuote(long id) {
+        Quote quote = quoteRepository.findById(id).orElse(null);
+
+        if(quote != null){
+            quote.setApproved(true);
+
+            quoteRepository.save(quote);
+        }
+    }
+
+    public int getNumberOfQuotesByCategory(CategoryType categoryType){
+        return quoteRepository.countByCategoryType(categoryType.getCategory());
+    }
+
+    private boolean validateQuote(QuoteDto quoteDto) {
+        Quote findQuiteByDescription = quoteRepository.findByDescription(quoteDto.getDescription());
+        return findQuiteByDescription == null;
     }
 }
