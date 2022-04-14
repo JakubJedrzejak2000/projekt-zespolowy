@@ -1,6 +1,7 @@
 package com.example.demo.quotes.service;
 
 import com.example.demo.quotes.dto.QuoteDto;
+import com.example.demo.quotes.exception.QuoteException;
 import com.example.demo.quotes.model.CategoryType;
 import com.example.demo.quotes.model.Quote;
 import com.example.demo.quotes.repository.QuoteRepository;
@@ -19,8 +20,9 @@ public class QuoteService {
     }
 
     public void addQuote(QuoteDto quoteDto) {
-        if (quoteDto.getDescription() == null)
-            return;
+        if (quoteDto.getDescription() == null) {
+            throw new QuoteException();
+        }
         if (validateQuote(quoteDto)) {
             String unknownPerson = "Unknown";
             Quote quote = new Quote();
@@ -35,31 +37,41 @@ public class QuoteService {
             quote.setApproved(false);
             quote.setCategoryType(quoteDto.getCategoryType().getCategory());
 
-            quoteRepository.save(quote);
+            Quote addedQuote = quoteRepository.save(quote);
+            if(addedQuote.getId() == 0){
+                throw new QuoteException();
+            }
+            return;
         }
+
+        throw new QuoteException();
     }
 
     public QuoteDto getRandomQuoteByCategory(CategoryType categoryType) {
-        Quote quote = quoteRepository.findByCategoryTypeAndApproved(categoryType.getCategory());
+        Quote quote = quoteRepository.findByCategoryTypeAndApproved(categoryType.getCategory()).orElseThrow(NullPointerException::new);
         return QuoteDto.mapIntoQuoteDto(quote);
     }
 
     public void approveQuote(long id) {
-        Quote quote = quoteRepository.findById(id).orElse(null);
+        Quote quote = quoteRepository.findById(id).orElseThrow(NullPointerException::new);
 
-        if(quote != null){
-            quote.setApproved(true);
-
-            quoteRepository.save(quote);
+        quote.setApproved(true);
+        Quote addedQuot = quoteRepository.save(quote);
+        if(addedQuot.getId() == 0){
+            throw new QuoteException();
         }
     }
 
-    public int getNumberOfQuotesByCategory(CategoryType categoryType){
+    public int getNumberOfQuotesByCategory(CategoryType categoryType) {
         return quoteRepository.countByCategoryType(categoryType.getCategory());
     }
 
     private boolean validateQuote(QuoteDto quoteDto) {
         Quote findQuiteByDescription = quoteRepository.findByDescription(quoteDto.getDescription());
         return findQuiteByDescription == null;
+    }
+
+    public Quote getUnApprovedQuoteFromDatabase() {
+        return quoteRepository.findFirstByApproved(false);
     }
 }

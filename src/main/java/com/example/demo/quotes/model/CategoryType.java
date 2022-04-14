@@ -5,8 +5,8 @@ import lombok.Getter;
 
 @AllArgsConstructor
 public enum CategoryType {
-    TECHNOLOGY("technology"),
-    LIFE("life");
+    TECHNOLOGY("TECHNOLOGY"),
+    LIFE("LIFE");
 
     @Getter
     private final String category;
