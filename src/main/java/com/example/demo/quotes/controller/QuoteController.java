@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController("/quote")
@@ -33,25 +34,25 @@ public class QuoteController {
 
     @Operation(summary = "Approve quote", description = "This endpoints allows to approve quote which was added before")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful"),
-            @ApiResponse(responseCode = "404", description = "Not found")})
+            @ApiResponse(responseCode = "200", description = "Successful approved"),
+            @ApiResponse(responseCode = "404", description = "Quote not found")})
     @PostMapping("/approve/{id}")
-    public void approveQuote(@PathVariable long id) {
-        quoteService.approveQuote(id);
+    public ResponseEntity<String> approveQuote(@PathVariable long id) {
+        return quoteService.approveQuote(id);
     }
 
     @Operation(summary = "Get random quote by category type", description = "This endpoint allows to get random quote from database")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful"),
-            @ApiResponse(responseCode = "404", description = "Bad request")})
+            @ApiResponse(responseCode = "200", description = "Successful got quote"),
+            @ApiResponse(responseCode = "404", description = "Couldn't find any quotes by this category")})
     @GetMapping("/{categoryType}")
-    public QuoteDto randomQuote(@PathVariable CategoryType categoryType) {
+    public ResponseEntity<QuoteDto> randomQuote(@PathVariable CategoryType categoryType) {
         return quoteService.getRandomQuoteByCategory(categoryType);
     }
 
     @Operation(summary = "Count quotes by category type", description = "This endpoint counts how many quotes are added into database")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Created")})
+            @ApiResponse(responseCode = "200", description = "Successfully returned number of quotes")})
     @GetMapping("/count/{categoryType}")
     public int countQuotes(@PathVariable CategoryType categoryType) {
         return quoteService.getNumberOfQuotesByCategory(categoryType);
@@ -59,10 +60,10 @@ public class QuoteController {
 
     @Operation(summary = "Get unapproved quote", description = "This endpoint returns first unapproved quote from database")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "200", description = "Successful"),
-            @ApiResponse(responseCode = "404", description = "Not found")})
+            @ApiResponse(responseCode = "200", description = "Successful got unapproved quote"),
+            @ApiResponse(responseCode = "404", description = "There is unapproved quotes")})
     @GetMapping("/unapproved")
-    public Quote getUnapprovedQuote() {
+    public ResponseEntity<Quote> getUnapprovedQuote() {
         return quoteService.getUnApprovedQuoteFromDatabase();
     }
 }

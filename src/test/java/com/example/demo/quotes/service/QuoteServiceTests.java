@@ -1,7 +1,6 @@
 package com.example.demo.quotes.service;
 
 import com.example.demo.quotes.dto.QuoteDto;
-import com.example.demo.quotes.exception.QuoteException;
 import com.example.demo.quotes.model.CategoryType;
 import com.example.demo.quotes.model.Quote;
 import com.example.demo.quotes.repository.QuoteRepository;
@@ -9,8 +8,10 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
+import org.springframework.http.HttpStatus;
 
 import java.util.Date;
+import java.util.Optional;
 
 class QuoteServiceTests {
     private static QuoteService quoteService;
@@ -25,26 +26,26 @@ class QuoteServiceTests {
     void verifyAddQuoteWithEmptyDescriptionThrowsQuoteException() {
         QuoteDto quoteDto = new QuoteDto();
         quoteDto.setDescription(null);
-        Assertions.assertThrows(QuoteException.class, () -> quoteService.addQuote(quoteDto));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, quoteService.addQuote(quoteDto).getStatusCode());
     }
 
     @Test
-    void verifyAddQuoteWithDuplicatedDescriptionThrowsQuoteException() {
+    void verifyAddQuoteWithDuplicatedDescriptionReturns400Status() {
         QuoteDto quoteDto = new QuoteDto();
         quoteDto.setDescription("Some description");
         Mockito.when(quoteRepository.findByDescription(Mockito.any(String.class))).thenReturn(new Quote());
-        Assertions.assertThrows(QuoteException.class, () -> quoteService.addQuote(quoteDto));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST, quoteService.addQuote(quoteDto).getStatusCode());
     }
 
     @Test
-    void verifyAddQuoteThrowsQuoteException() {
+    void verifyAddQuoteReturns400Status() {
         QuoteDto quoteDto = new QuoteDto();
         quoteDto.setDescription("Some description");
         Mockito.when(quoteRepository.findByDescription(Mockito.any(String.class))).thenReturn(new Quote());
 
         Quote quote = new Quote();
         Mockito.when(quoteRepository.save(Mockito.any(Quote.class))).thenReturn(quote);
-        Assertions.assertThrows(QuoteException.class, () -> quoteService.addQuote(quoteDto));
+        Assertions.assertEquals(HttpStatus.BAD_REQUEST,quoteService.addQuote(quoteDto).getStatusCode());
     }
 
     @Test
@@ -67,18 +68,14 @@ class QuoteServiceTests {
 
     @Test
     void verifyApproveQuoteThrowsQuoteException() {
-        Mockito.when(quoteRepository.findById(Mockito.any(Long.class))).thenReturn(java.util.Optional.of(new Quote()));
-
-        Quote quote = new Quote();
-        quote.setId(0L);
-        Mockito.when(quoteRepository.save(Mockito.any(Quote.class))).thenReturn(quote);
-        Assertions.assertThrows(QuoteException.class, () -> quoteService.approveQuote(1));
+        Mockito.when(quoteRepository.findById(Mockito.any(Long.class))).thenReturn(Optional.empty());
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, quoteService.approveQuote(1).getStatusCode());
     }
 
     @Test
     void verifyGetRandomQuoteByCategoryThrowsNullPointException() {
         Mockito.when(quoteRepository.findByCategoryTypeAndApproved(Mockito.any(String.class))).thenReturn(null);
-        Assertions.assertThrows(NullPointerException.class, () -> quoteService.getRandomQuoteByCategory(CategoryType.LIFE));
+        Assertions.assertEquals(HttpStatus.NOT_FOUND, quoteService.getRandomQuoteByCategory(CategoryType.LIFE).getStatusCode());
     }
     @Test
     void verifyGetRandomQuoteByCategoryReturnsDtoObject() {
@@ -87,8 +84,8 @@ class QuoteServiceTests {
         quote.setAuthor("fgdfds");
         quote.setAddedBy("fgddffds");
         quote.setDate(new Date());
-        Mockito.when(quoteRepository.findByCategoryTypeAndApproved(Mockito.any(String.class))).thenReturn(java.util.Optional.of(quote));
-        Assertions.assertDoesNotThrow(() -> quoteService.getRandomQuoteByCategory(CategoryType.LIFE));
+        Mockito.when(quoteRepository.findByCategoryTypeAndApproved(Mockito.any(String.class))).thenReturn(quote);
+        Assertions.assertEquals(HttpStatus.OK, quoteService.getRandomQuoteByCategory(CategoryType.LIFE).getStatusCode());
     }
 
     @Test

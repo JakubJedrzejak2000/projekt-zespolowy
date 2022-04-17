@@ -6,9 +6,12 @@ import com.example.demo.quotes.model.CategoryType;
 import com.example.demo.quotes.model.Quote;
 import com.example.demo.quotes.repository.QuoteRepository;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @Service
 public class QuoteService {
@@ -19,9 +22,9 @@ public class QuoteService {
         this.quoteRepository = quoteRepository;
     }
 
-    public void addQuote(QuoteDto quoteDto) {
+    public ResponseEntity<String> addQuote(QuoteDto quoteDto) {
         if (quoteDto.getDescription() == null) {
-            throw new QuoteException();
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Description cannot be null");
         }
         if (validateQuote(quoteDto)) {
             String unknownPerson = "Unknown";
@@ -37,29 +40,30 @@ public class QuoteService {
             quote.setApproved(false);
             quote.setCategoryType(quoteDto.getCategoryType().getCategory());
 
-            Quote addedQuote = quoteRepository.save(quote);
-            if(addedQuote.getId() == 0){
-                throw new QuoteException();
-            }
-            return;
+            quoteRepository.save(quote);
+            return ResponseEntity.status(HttpStatus.CREATED).body("Quote has been created");
         }
 
-        throw new QuoteException();
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Quote with this description already exists");
     }
 
-    public QuoteDto getRandomQuoteByCategory(CategoryType categoryType) {
-        Quote quote = quoteRepository.findByCategoryTypeAndApproved(categoryType.getCategory()).orElseThrow(NullPointerException::new);
-        return QuoteDto.mapIntoQuoteDto(quote);
+    public ResponseEntity<QuoteDto> getRandomQuoteByCategory(CategoryType categoryType) {
+        Quote quote = quoteRepository.findByCategoryTypeAndApproved(categoryType.getCategory());
+        if(quote == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+        return ResponseEntity.status(HttpStatus.OK).body(QuoteDto.mapIntoQuoteDto(quote));
     }
 
-    public void approveQuote(long id) {
-        Quote quote = quoteRepository.findById(id).orElseThrow(NullPointerException::new);
-
+    public ResponseEntity<String> approveQuote(long id) {
+        Optional<Quote> findQuote = quoteRepository.findById(id);
+        if(findQuote.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Quote not found");
+        }
+        Quote quote = findQuote.get();
         quote.setApproved(true);
-        Quote addedQuot = quoteRepository.save(quote);
-        if(addedQuot.getId() == 0){
-            throw new QuoteException();
-        }
+        quoteRepository.save(quote);
+        return ResponseEntity.status(HttpStatus.OK).body("Quote has been updated");
     }
 
     public int getNumberOfQuotesByCategory(CategoryType categoryType) {
@@ -71,7 +75,13 @@ public class QuoteService {
         return findQuiteByDescription == null;
     }
 
-    public Quote getUnApprovedQuoteFromDatabase() {
-        return quoteRepository.findFirstByApproved(false);
+    public ResponseEntity<Quote> getUnApprovedQuoteFromDatabase() {
+        Quote quote = quoteRepository.findFirstByApproved(false);
+
+        if(quote == null){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+
+        return ResponseEntity.status(HttpStatus.OK).body(quote);
     }
 }
