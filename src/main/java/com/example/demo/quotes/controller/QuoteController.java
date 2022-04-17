@@ -24,8 +24,8 @@ public class QuoteController {
             "but when it is added, it will remain as 'Awaiting for verification' which means that someone will have to " +
             "verify if quote is valid. Also if something goes wrong then it will return http status 400")
     @ApiResponses(value = {
-            @ApiResponse(responseCode = "201", description = "Created"),
-            @ApiResponse(responseCode = "400", description = "Bad request")})
+            @ApiResponse(responseCode = "201", description = "Created new quote in the system"),
+            @ApiResponse(responseCode = "400", description = "Bad request, quote already exists in the database")})
     @PostMapping("/")
     public void addQuote(@Parameter @RequestBody QuoteDto quoteDto) {
         quoteService.addQuote(quoteDto);
