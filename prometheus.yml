@@ -6,6 +6,6 @@ scrape_configs:
     metrics_path: '/actuator/prometheus'
     scrape_interval: 5s
     static_configs:
-      - targets: ['quote-service:8080']
+      - targets: ['quoteservice:8080']
         labels:
-          group: 'hello'
+          group: 'backend'
