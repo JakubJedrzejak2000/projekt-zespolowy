@@ -45,7 +45,7 @@ public class QuoteController {
     @ApiResponses(value = {
             @ApiResponse(responseCode = "200", description = "Successful got quote"),
             @ApiResponse(responseCode = "404", description = "Couldn't find any quotes by this category")})
-    @GetMapping("/{categoryType}")
+    @GetMapping("/quote/{categoryType}")
     public ResponseEntity<QuoteDto> randomQuote(@PathVariable CategoryType categoryType) {
         return quoteService.getRandomQuoteByCategory(categoryType);
     }
