@@ -30,7 +30,6 @@ Uzytkownik ma możliwość zaproponowania własnego cytatu, który trafi do bazy
 ### Technologie chmurowe
 
  * Azure Wev App
- * Azure Hive
 
 ### Narzędzia
  * Grafana
