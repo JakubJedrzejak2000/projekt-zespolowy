@@ -125,3 +125,31 @@ DATABASE_NAME=$database_name \
 DATABASE_USERNAME=$user_login \
 DATABASE_PASSWORD=$user_password
 ```
+
+## Endpointy aplikacji
+Aplikacja działa na architekturze klient-serwer, gdzie serwer wystawia swoje endpointy, do których odwołuje się aplikacja kliencka. Oto spis wszystkich udostępnianych przez serwis endpointów:
+
+* POST /approve/{id} - Służy do zatwierdzenia zaproponowaego przez użytkownika cytatu
+
+* POST / - Służy do dodania nowego cytatu do kolejki. wymaga Body które powinno wyglądać tak:
+```json
+{
+  "description": "string",
+  "categoryType": "TECHNOLOGY",
+  "author": "string",
+  "addedBy": "string"
+}
+```
+* GET /quote/{categoryType} - Służy do wygenerowania losowego cytatu z podanej w url kategorii. Zwracany JSON wygląda następująco:
+```json
+{
+  "description": "string",
+  "categoryType": "TECHNOLOGY",
+  "author": "string",
+  "addedBy": "string",
+  "date": "2022-04-22T21:35:29.134+00:00"
+}
+```
+* GET /unapproved - Wyświetla wszystkie niezaakcpetowane jeszcze cytaty
+
+* GET /count/{categoryType} - Zlicza cytaty po podanej kategorii
