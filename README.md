@@ -29,7 +29,7 @@ Uzytkownik ma możliwość zaproponowania własnego cytatu, który trafi do bazy
 
 ### Technologie chmurowe
 
- * Azure Wev App
+ * Azure Web App
  * Azure Flexible Postgresql Database
 
 ### Narzędzia
