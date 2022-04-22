@@ -30,7 +30,7 @@ Uzytkownik ma możliwość zaproponowania własnego cytatu, który trafi do bazy
 ### Technologie chmurowe
 
  * Azure Wev App
- * Azure Hive
+ * Azure Flexible Postgresql Database
 
 ### Narzędzia
  * Grafana
@@ -125,6 +125,7 @@ DATABASE_NAME=$database_name \
 DATABASE_USERNAME=$user_login \
 DATABASE_PASSWORD=$user_password
 ```
+<<<<<<< HEAD
 
 ## Endpointy aplikacji
 Aplikacja działa na architekturze klient-serwer, gdzie serwer wystawia swoje endpointy, do których odwołuje się aplikacja kliencka. Oto spis wszystkich udostępnianych przez serwis endpointów:
