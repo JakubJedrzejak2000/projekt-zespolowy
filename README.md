@@ -125,7 +125,6 @@ az webapp config appsettings set \
       DATABASE_USERNAME=$user_login \
       DATABASE_PASSWORD=$user_password
 ```
-<<<<<<< HEAD
 
 ## Endpointy aplikacji
 Aplikacja działa na architekturze klient-serwer, gdzie serwer wystawia swoje endpointy, do których odwołuje się aplikacja kliencka. Oto spis wszystkich udostępnianych przez serwis endpointów:
