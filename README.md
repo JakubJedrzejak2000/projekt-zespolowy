@@ -71,7 +71,7 @@ Terraform zapyta użytkownika o dane, które ten musi podać. Następnie wystarc
 
 Zdeployowanie bazy danych oraz frontendu odbywa się za pomocą komend azure cli.
 Najpierw trzeba określić kilka zmiennych, które będą się powtarzac
-```
+```bash
 export resource_group={nazwa grupy zasobow, którą podano wcześniej}
 export user_password={haslo uzytkownika}
 export user_login={login uzytkownika}
