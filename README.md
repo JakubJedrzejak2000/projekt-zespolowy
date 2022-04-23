@@ -69,7 +69,7 @@ terraform apply
 ```
 Terraform zapyta użytkownika o dane, które ten musi podać. Następnie wystarczy jeszcze wpisać "yes" i aplikacja została zdeployowana.
 
-Zdeployowanie bazy danych oraz frontendu odbywa się za pomocą komend azure cli.
+Zdeployowanie bazy danych oraz backendu odbywa się za pomocą komend azure cli.
 Najpierw trzeba określić kilka zmiennych, które będą się powtarzac
 ```bash
 export resource_group={nazwa grupy zasobow, którą podano wcześniej}
