@@ -94,7 +94,7 @@ az postgres flexible-server create \
 ```
 Po udanym zdeployowaniu Bazy Danych, konsola wyświetli kilka przydatnych danych. Warto zapisać sobie nazwę bazy danych oraz hosta.
 ```
-export databse_name={wartosc databaseName}
+export database_name={wartosc databaseName}
 export host{wartosc host}
 ```
 
