@@ -29,7 +29,7 @@ Uzytkownik ma możliwość zaproponowania własnego cytatu, który trafi do bazy
 
 ### Technologie chmurowe
 
- * Azure Wev App
+ * Azure Web App
  * Azure Flexible Postgresql Database
 
 ### Narzędzia
@@ -69,9 +69,9 @@ terraform apply
 ```
 Terraform zapyta użytkownika o dane, które ten musi podać. Następnie wystarczy jeszcze wpisać "yes" i aplikacja została zdeployowana.
 
-Zdeployowanie bazy danych oraz frontendu odbywa się za pomocą komend azure cli.
+Zdeployowanie bazy danych oraz backendu odbywa się za pomocą komend azure cli.
 Najpierw trzeba określić kilka zmiennych, które będą się powtarzac
-```
+```bash
 export resource_group={nazwa grupy zasobow, którą podano wcześniej}
 export user_password={haslo uzytkownika}
 export user_login={login uzytkownika}
@@ -81,51 +81,50 @@ export webapp_name={nazwa aplikacji}
 Po stworzeniu kilku zmiennych, należy rozpocząć od stworzenia bazy danych postgreSQL
 ```
 az postgres flexible-server create \
---admin-password $user_password \
---admin-user $user_login \
---location eastus \
---name service-db \
---resource-group $resource_group \
---storage-size 32 \
---public-access all \
---sku-name Standard_B1ms \
---tier Burstable \
---public-access 0.0.0.0
+  --admin-password $user_password \
+  --admin-user $user_login \
+  --location eastus \
+  --name service-db \
+  --resource-group $resource_group \
+  --storage-size 32 \
+  --public-access all \
+  --sku-name Standard_B1ms \
+  --tier Burstable \
+  --public-access 0.0.0.0
 ```
 Po udanym zdeployowaniu Bazy Danych, konsola wyświetli kilka przydatnych danych. Warto zapisać sobie nazwę bazy danych oraz hosta.
-```
-export databse_name={wartosc databaseName}
-export host{wartosc host}
+```bash
+export database_name={wartosc databaseName}
+export host={wartosc host}
 ```
 
 Następnym krokiem jest stworzenie Serivce Planu dla Web appa.
 ```
 az appservice plan create \
---name $plan_name \
---resource-group $resource_group \
---location eastus \
---sku P1V2 \
---is-linux
+  --name $plan_name \
+  --resource-group $resource_group \
+  --location eastus \
+  --sku P1V2 \
+  --is-linux
 ```
 Po udanym zdeployowaniu trzeba jeszcze stworzyć samą aplikację.
 ```
 az webapp create \
---name $webapp_name \
---plan $plan_name \
---resource-group $resource_group \
---deployment-container-image-name oskarskalski/quote-service:latest
+  --name $webapp_name \
+  --plan $plan_name \
+  --resource-group $resource_group \
+  --deployment-container-image-name oskarskalski/quote-service:latest
 ```
 Aby aplikacja działa w pełni sprawnie należy dorzucić jeszcze zmienne środowiskowe.
 ```
 az webapp config appsettings set \
---name $webapp_name \
---resource-group $resource_group \
---settings ENVIRONMENT=$host \
-DATABASE_NAME=$database_name \
-DATABASE_USERNAME=$user_login \
-DATABASE_PASSWORD=$user_password
+  --name $webapp_name \
+  --resource-group $resource_group \
+  --settings ENVIRONMENT=$host \
+      DATABASE_NAME=$database_name \
+      DATABASE_USERNAME=$user_login \
+      DATABASE_PASSWORD=$user_password
 ```
-<<<<<<< HEAD
 
 ## Endpointy aplikacji
 Aplikacja działa na architekturze klient-serwer, gdzie serwer wystawia swoje endpointy, do których odwołuje się aplikacja kliencka. Oto spis wszystkich udostępnianych przez serwis endpointów:
