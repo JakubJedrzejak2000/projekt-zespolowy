@@ -95,7 +95,7 @@ az postgres flexible-server create \
 Po udanym zdeployowaniu Bazy Danych, konsola wyświetli kilka przydatnych danych. Warto zapisać sobie nazwę bazy danych oraz hosta.
 ```bash
 export database_name={wartosc databaseName}
-export host{wartosc host}
+export host={wartosc host}
 ```
 
 Następnym krokiem jest stworzenie Serivce Planu dla Web appa.
